@@ -15,7 +15,7 @@ tstat <- function(x, y, local = TRUE){
     x.bar <- mean(x)
     y.bar <- mean(y)
         
-    (x.bar - y.bar) / sqrt(((nA - 1) * s2A + (nB - 1) * s2B) / (nA + nB - 2))
+    (x.bar - y.bar) / sqrt(var(c(x, y)) * (1 / nA + 1/nB))
 
 }   
    
@@ -141,7 +141,9 @@ tstat <- function(x, y, local = TRUE){
                     )
                 )
         
-        ref
+        result <- list(ref = ref, tt = tt)
+        
+        return(result)
     
     })
     
@@ -176,7 +178,9 @@ tstat <- function(x, y, local = TRUE){
                     )
                 )
         
-        ref
+        result <- list(ref = ref, tt = tt)
+        
+        return(result)
     
     })
     
@@ -194,25 +198,25 @@ tstat <- function(x, y, local = TRUE){
         
         if (input$alterOption == 'Two-sided') {
         
-            p.value <- sum(abs(tt) > abs(ref)) / N 
+            p.value <- sum(abs(ref$tt) > abs(ref$ref)) / N 
             
-            crit <- quantile(1 - input$signLvl, abs(ref))
+            crit <- quantile(abs(ref$ref), 1 - input$signLvl)
         
         } else if (input$alterOption == 'Less') {
         
-            p.value <- sum(tt < ref) / N
+            p.value <- sum(ref$tt < ref$ref) / N
             
-            crit <- quantile(input$signLvl / 2, ref)
+            crit <- quantile(ref$ref, input$signLvl / 2)
         
         } else if (input$alterOption == 'Greater') {
         
-            p.value <- sum(tt > ref) / N
+            p.value <- sum(ref$tt > ref$ref) / N
             
-            crit <- quantile(1 - input$signLvl / 2, ref)
+            crit <- quantile(ref$ref, 1 - input$signLvl / 2)
         
         }
         
-        result <- list(stat = tt, p.value = p.value, ref = ref, crit = crit)
+        result <- list(stat = ref$tt, p.value = p.value, ref = ref$ref, crit = crit)
         
         return(result)
     
@@ -275,26 +279,41 @@ tstat <- function(x, y, local = TRUE){
         
         }
         
-       hist(bootstrapTest$ref)
+       hist(bootstrapTest$ref, freq = FALSE, xlim = c(-3, 3), ylim = dt(0, tTest$parameter))
        curve(dt(x, tTest$parameter), add = TRUE)
-       abline(v = tTest$statistic)
+       abline(v = tTest$statistic, lty = 2)
+       text(x = tTest$statistic, y = dt(0, tTest$parameter) / 2, paste(round(tTest$statistic, 4)), srt = 270, pos = 4, col = 'black')
        
        if (input$alterOption == 'Two-sided') {
        
            abline(v = -bootstrapTest$crit, lty = 2, col = 'blue')
+           text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(-bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+           
            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+           text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+           
            abline(v = qt(input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
+           text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(0.05/ 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+           
            abline(v = qt(1 - input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
+           text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - 0.05 / 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
            
        } else if (input$alterOption == 'Less') {
        
            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+           text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+           
            abline(v = qt(input$signLvl, tTest$parameter), lty = 2, col = 'red')
+           text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
            
        } else if (input$alterOption == 'Greater') {
        
            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+           text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+           
            abline(v = qt(1 - input$signLvl, tTest$parameter), lty = 2, col = 'red')
+           text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+           
        
        }
 

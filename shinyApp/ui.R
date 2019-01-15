@@ -79,11 +79,11 @@ shinyUI(fluidPage(
                         )                        
                     ),
                         
-                    tabPanel("Tests",
+                    tabPanel("Test",
                         fluidRow(
                             column(12,
                                 plotOutput("testPlot")
-                                ,textOutput("ControlChartWarning")
+                                #,textOutput("ControlChartWarning")
                                 
                             )        
                         )
