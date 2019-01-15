@@ -275,27 +275,27 @@ tstat <- function(x, y){
         }
         
         hist(bootstrapTest$ref)
-        curve(dt(x, tTest$parameter), add = TRUE)
-        abline(v = tTest$statistic)
-        
-        if (input$alterOption == 'Two-sided') {
-        
-            abline(v = -bootstrapTest$crit, lty = 2, col = 'blue')
-            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-            abline(v = qt(input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
-            abline(v = qt(1 - input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
-            
-        } else if (input$alterOption == 'Less') {
-        
-            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-            abline(v = qt(input$signLvl, tTest$parameter), lty = 2, col = 'red')
-            
-        } else if (input$alterOption == 'Greater') {
-        
-            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-            abline(v = qt(1 - input$signLvl, tTest$parameter), lty = 2, col = 'red')
-        
-        }
+       #curve(dt(x, tTest$parameter), add = TRUE)
+       #abline(v = tTest$statistic)
+       #
+       #if (input$alterOption == 'Two-sided') {
+       #
+       #    abline(v = -bootstrapTest$crit, lty = 2, col = 'blue')
+       #    abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+       #    abline(v = qt(input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
+       #    abline(v = qt(1 - input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
+       #    
+       #} else if (input$alterOption == 'Less') {
+       #
+       #    abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+       #    abline(v = qt(input$signLvl, tTest$parameter), lty = 2, col = 'red')
+       #    
+       #} else if (input$alterOption == 'Greater') {
+       #
+       #    abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+       #    abline(v = qt(1 - input$signLvl, tTest$parameter), lty = 2, col = 'red')
+       #
+       #}
 
         
     
