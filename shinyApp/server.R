@@ -4,7 +4,7 @@ shinyServer(function(input, output) {
     source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/shinyApp/head.server.R', local = TRUE)
 
    
-tstat <- function(x, y){
+tstat <- function(x, y, local = TRUE){
 
     nA <- length(x)
     nB <- length(y)
@@ -12,7 +12,10 @@ tstat <- function(x, y){
     s2A <- var(x)
     s2B <- var(y)
         
-    (x - y) / sqrt(((nA - 1) * s2A + (nB - 1) * s2B) / (nA + nB - 2))
+    x.bar <- mean(x)
+    y.bar <- mean(y)
+        
+    (x.bar - y.bar) / sqrt(((nA - 1) * s2A + (nB - 1) * s2B) / (nA + nB - 2))
 
 }   
    
@@ -123,7 +126,7 @@ tstat <- function(x, y){
         
         nA <- length(sampA)
         
-        tt <- (sampA - input$Mu0) / sqrt(var(sampA) / nA) 
+        tt <- (mean(sampA) - input$Mu0) / sqrt(var(sampA) / nA) 
 
         ref <- unlist(
                     lapply(
@@ -132,7 +135,7 @@ tstat <- function(x, y){
                         
                             x1 <- sample(sampA, nA, replace = TRUE)
                
-                            (x1 - input$Mu0) / sqrt(var(x1) / nA) 
+                            (mean(x1) - input$Mu0) / sqrt(var(x1) / nA) 
                             
                         }
                     )
@@ -147,8 +150,6 @@ tstat <- function(x, y){
     bootstrapTest.2samp <- reactive({
     
         N <- round(input$bootNum)
-    
-        ref <- rep(NA, input$bootNum)
         
         x <- sampA()
         y <- sampB()
@@ -274,28 +275,28 @@ tstat <- function(x, y){
         
         }
         
-        hist(bootstrapTest$ref)
-       #curve(dt(x, tTest$parameter), add = TRUE)
-       #abline(v = tTest$statistic)
-       #
-       #if (input$alterOption == 'Two-sided') {
-       #
-       #    abline(v = -bootstrapTest$crit, lty = 2, col = 'blue')
-       #    abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-       #    abline(v = qt(input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
-       #    abline(v = qt(1 - input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
-       #    
-       #} else if (input$alterOption == 'Less') {
-       #
-       #    abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-       #    abline(v = qt(input$signLvl, tTest$parameter), lty = 2, col = 'red')
-       #    
-       #} else if (input$alterOption == 'Greater') {
-       #
-       #    abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-       #    abline(v = qt(1 - input$signLvl, tTest$parameter), lty = 2, col = 'red')
-       #
-       #}
+       hist(bootstrapTest$ref)
+       curve(dt(x, tTest$parameter), add = TRUE)
+       abline(v = tTest$statistic)
+       
+       if (input$alterOption == 'Two-sided') {
+       
+           abline(v = -bootstrapTest$crit, lty = 2, col = 'blue')
+           abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+           abline(v = qt(input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
+           abline(v = qt(1 - input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
+           
+       } else if (input$alterOption == 'Less') {
+       
+           abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+           abline(v = qt(input$signLvl, tTest$parameter), lty = 2, col = 'red')
+           
+       } else if (input$alterOption == 'Greater') {
+       
+           abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+           abline(v = qt(1 - input$signLvl, tTest$parameter), lty = 2, col = 'red')
+       
+       }
 
         
     
