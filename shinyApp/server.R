@@ -268,11 +268,13 @@ shinyServer(function(input, output) {
         x <- as.vector(sampA())
         
         if (input$sampOption == 'One Sample') {
-            boxplot(x, horizontal = TRUE)
+            pl <- boxplot(x, horizontal = TRUE)
         } else if (input$sampOption == 'Two Samples') {
             y <- as.vector(sampB())
-            boxplot(x, y, horizontal = TRUE)
+            pl <- boxplot(x, y, horizontal = TRUE)
         }
+        
+        pl
     
     })
   
@@ -294,7 +296,7 @@ shinyServer(function(input, output) {
         
         }
         
-       hist(bootstrapTest$ref, freq = FALSE, xlim = c(-3, 3), ylim = c(0, dt(0, tTest$parameter)))
+       hist(bootstrapTest$ref, freq = FALSE, xlim = c(-3, 3), ylim = c(0, dt(0, tTest$parameter)), col = 'grey')
        curve(dt(x, tTest$parameter), add = TRUE)
        abline(v = tTest$statistic, lty = 2)
        text(x = tTest$statistic, y = dt(0, tTest$parameter) / 2, paste(round(tTest$statistic, 4)), srt = 270, pos = 4, col = 'black')
