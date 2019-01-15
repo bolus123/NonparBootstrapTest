@@ -4,20 +4,20 @@ shinyServer(function(input, output) {
     source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/shinyApp/head.server.R', local = TRUE)
 
    
-tstat <- function(x, y, local = TRUE){
+    tstat <- function(x, y, local = TRUE){
 
-    nA <- length(x)
-    nB <- length(y)
+        nA <- length(x)
+        nB <- length(y)
     
-    s2A <- var(x)
-    s2B <- var(y)
+        s2A <- var(x)
+        s2B <- var(y)
         
-    x.bar <- mean(x)
-    y.bar <- mean(y)
+        x.bar <- mean(x)
+        y.bar <- mean(y)
         
-    (x.bar - y.bar) / sqrt(var(c(x, y)) * (1 / nA + 1/nB))
+        (x.bar - y.bar) / sqrt(var(c(x, y)) * (1 / nA + 1/nB))
 
-}   
+    }   
    
     
    
@@ -279,7 +279,7 @@ tstat <- function(x, y, local = TRUE){
         
         }
         
-       hist(bootstrapTest$ref, freq = FALSE, xlim = c(-3, 3), ylim = dt(0, tTest$parameter))
+       hist(bootstrapTest$ref, freq = FALSE, xlim = c(-3, 3), ylim = c(0, dt(0, tTest$parameter)))
        curve(dt(x, tTest$parameter), add = TRUE)
        abline(v = tTest$statistic, lty = 2)
        text(x = tTest$statistic, y = dt(0, tTest$parameter) / 2, paste(round(tTest$statistic, 4)), srt = 270, pos = 4, col = 'black')
