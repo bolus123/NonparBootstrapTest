@@ -239,7 +239,7 @@ shinyServer(function(input, output) {
             stringsAsFactors = FALSE
         )
 
-    }, digits = 5)
+    }, digits = 4)
     
     output$SampBStat <- renderTable({
 
@@ -251,7 +251,7 @@ shinyServer(function(input, output) {
             stringsAsFactors = FALSE
         )
 
-    }, digits = 5)
+    }, digits = 4)
     
     output$boxplotA <- renderPlot({
         x <- as.vector(sampA())
@@ -261,6 +261,19 @@ shinyServer(function(input, output) {
     output$boxplotB <- renderPlot({
         x <- as.vector(sampB())
         boxplot(x)
+    })
+    
+    output$boxPlot <- renderPlot({
+        
+        x <- as.vector(sampA())
+        
+        if (input$sampOption == 'One Sample') {
+            boxplot(x, horizontal = TRUE)
+        } else if (input$sampOption == 'Two Samples') {
+            y <- as.vector(sampB())
+            boxplot(x, y, horizontal = TRUE)
+        }
+    
     })
   
 ################################################################################################################    

@@ -70,11 +70,11 @@ shinyUI(fluidPage(
                             column(6,
                                 tableOutput("SampBStat")
                             ),
-                            column(6,
-                                plotOutput("boxplotA")
-                            ),
-                            column(6,
-                                plotOutput("boxplotB")
+                           # column(6,
+                           #     plotOutput("boxplotA")
+                           # ),
+                            column(12,
+                                plotOutput("boxPlot")
                             )
                         )                        
                     ),
