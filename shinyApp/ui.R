@@ -24,7 +24,12 @@ shinyUI(fluidPage(
         sidebarPanel(
           
                 selectInput("sampOption", "Method Option:", 
-                      choices = c("One Sample", "Two Samples")),
+                      choices = c(
+                        "One Sample" 
+                        ,"Two Samples"
+                        ,"One Sample test"
+                        ,"Two Samples test"
+                      )),
 
           
                 selectInput("alterOption", "Alternative Option:", 

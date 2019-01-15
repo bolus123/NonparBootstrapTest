@@ -23,9 +23,16 @@ tstat <- function(x, y){
     
     sampA <- reactive({
 
-        req(input$sampA)
-        inFile <- input$sampA
-        sampA <- as.vector(read_excel(inFile$datapath, 1))
+        if (input$sampOption == "One Sample test") {
+        
+            sampA <- rnorm(49)
+        
+        } else if (input$sampOption == "One Sample") {
+    
+            req(input$sampA)
+            inFile <- input$sampA
+            sampA <- as.vector(read_excel(inFile$datapath, 1))
+        }
         
         sampA
         
@@ -33,9 +40,17 @@ tstat <- function(x, y){
     
     sampB <- reactive({
 
-        req(input$sampB)
-        inFile <- input$sampB
-        sampB <- as.vector(read_excel(inFile$datapath, 1))
+        if (input$sampOption == "Two Samples test") {
+        
+            sampB <- rnorm(52)
+        
+        } else if (input$sampOption == "Two Samples") {
+    
+            req(input$sampB)
+            inFile <- input$sampB
+            sampB <- as.vector(read_excel(inFile$datapath, 1))
+            
+        }
 
         sampB
         
