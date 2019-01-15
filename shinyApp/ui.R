@@ -28,7 +28,7 @@ shinyUI(fluidPage(
 
           
                 selectInput("alterOption", "Alternative Option:", 
-                      choices = c("One Side", "Two Sides")),
+                      choices = c("Two-sided", "Less", "Greater")),
           
                 numericInput("signLvl", "Significance Level:", 0.05, min = 1e-6, max = 1 - 1e-6),
           
@@ -37,7 +37,8 @@ shinyUI(fluidPage(
                 conditionalPanel(
                     condition = "input.sampOption == 'One Sample'",
                     fileInput('sampA', 'Choose a Sample',
-                        accept = c(".xlsx"))
+                        accept = c(".xlsx")),
+                    numericInput("Mu0", "Target Mean:", 0)    
                 ),
                 
                 conditionalPanel(
@@ -71,18 +72,17 @@ shinyUI(fluidPage(
                                 plotOutput("boxplotB")
                             )
                         )                        
+                    ),
+                        
+                    tabPanel("Tests",
+                        fluidRow(
+                            column(12,
+                                plotOutput("testPlot")
+                                #,textOutput("ControlChartWarning")
+                                
+                            )        
+                        )
                     )
-                    #,
-                    #    
-                    #tabPanel("Tests",
-                    #    fluidRow(
-                    #        column(12,
-                    #            plotOutput("ControlChart"),
-                    #            textOutput("ControlChartWarning")
-                    #            
-                    #        )        
-                    #    )
-                    #)
                         
                         
                         
