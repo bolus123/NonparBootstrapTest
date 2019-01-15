@@ -28,7 +28,7 @@ Statistics <- function(Data){
     out <- list(
         Metric = c('n', 'Skewness', 'Kurtosis', 'Max', 'Min', 'Q-0.01', 'Q-0.05', 'Q-0.1', 'Q-0.2', 'Q-0.25', 'Q-0.5'
             , 'Q-0.75', 'Q-0.8', 'Q-0.9', 'Q-0.95', 'Q-0.99', 'KS P-value'),
-        Value = c(n, skew, kurt, quantiles, ks.norm)
+        Value = round(c(n, skew, kurt, quantiles, ks.norm), 4)
     )
     
     return(out)
