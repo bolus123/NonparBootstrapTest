@@ -37,3 +37,32 @@ Statistics <- function(Data){
 
 
 #########################################################################
+
+tstat <- function(x, y, local = TRUE){
+
+    nA <- length(x)
+    nB <- length(y)
+    
+    s2A <- var(x)
+    s2B <- var(y)
+        
+    x.bar <- mean(x)
+    y.bar <- mean(y)
+        
+    s2.x <- var(x)
+    s2.y <- var(y)
+    
+    s2p <- ((nA - 1) * s2.x + (nB - 1) * s2.y) / (nA + nB - 2)
+        
+    (x.bar - y.bar) / sqrt(s2p * (1 / nA + 1/nB))
+
+}
+
+samp.xlsx.f <- function(file) {
+    
+    req(file)
+    inFile <- file
+    out <- read_excel(inFile$datapath, 1)
+    
+}
+      

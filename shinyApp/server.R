@@ -3,86 +3,99 @@ shinyServer(function(input, output) {
   
     source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/shinyApp/head.server.R', local = TRUE)
 
-   
-    tstat <- function(x, y, local = TRUE){
-
-        nA <- length(x)
-        nB <- length(y)
-    
-        s2A <- var(x)
-        s2B <- var(y)
-        
-        x.bar <- mean(x)
-        y.bar <- mean(y)
-        
-        (x.bar - y.bar) / sqrt(var(c(x, y)) * (1 / nA + 1/nB))
-
-    }   
-   
-    
-   
     
 ################################################################################################################ 
     
-    sampA <- reactive({
+    samp <- reactive({
 
+        sampA <- NA
+        sampB <- NA
+    
         if (input$sampOption == "One Sample test") {
         
             sampA <- rnorm(49)
         
         } else if (input$sampOption == "One Sample") {
     
-            req(input$sampA)
-            inFile <- input$sampA
-            sampA <- as.vector(read_excel(inFile$datapath, 1))
-        }
+            sampA <- samp.xlsx.f(input$sampA)
+            
+        } else if (input$sampOption == "Two Samples test") {
         
-        sampA
-        
-    })
-    
-    sampB <- reactive({
-
-        if (input$sampOption == "Two Samples test") {
-        
+            sampA <- rnorm(49)
             sampB <- rnorm(52)
         
-        } else if (input$sampOption == "Two Samples") {
+        } else if (input$sampOption == 'Two Samples') {
+        
+            sampA <- samp.xlsx.f(input$sampA)
+            sampB <- samp.xlsx.f(input$sampB)
+        
+        }
+        
+        
+        out <- list(sampA = sampA, sampB = sampB)
+        
+        out
+        
+        
+    })
     
-            req(input$sampB)
-            inFile <- input$sampB
-            sampB <- as.vector(read_excel(inFile$datapath, 1))
+    flag.2samp <- reactive({
+        
+        if (input$sampOption == "One Sample test") {
+        
+            out <- 1
+        
+        } else if (input$sampOption == "One Sample") {
+    
+            out <- 1
             
-        }
-
-        sampB
+        } else if (input$sampOption == "Two Samples test") {
         
-    })
+            out <- 2
+        
+        } else if (input$sampOption == 'Two Samples') {
+        
+            out <- 2
+        
+        }
+        
+        out
     
+    })
     
 ################################################################################################################
     
-    tbA <- reactive({
-        x <- sampA()
-        result <- Statistics(x)
-        
-        result 
-    })
+    tb <- reactive({
     
-    tbB <-  reactive({
-       
-        if (input$sampOption == "Two Samples" | (input$sampOption == "Two Samples test")) {
-            x <- sampB()
-            result <- Statistics(x)
+        samp <- samp()
+        
+        tbA <- NA
+        tbB <- NA
+        
+        if (flag.2samp() == 1) {
+        
+            tbA <- Statistics(samp$sampA)
+        
+        } if (flag.2samp() == 2) {
+        
+            tbA <- Statistics(samp$sampA)
+            tbB <- Statistics(samp$sampB)
+        
         }
-        result
+        
+        out <- list(tbA = tbA, tbB = tbB)
+        
+        out 
     })
     
 ################################################################################################################
 
-    tTest.1samp <- reactive({
+    tTest <- reactive({
     
-        x <- sampA()
+        tTestA <- NA
+        tTestB <- NA
+    
+        samp <- samp()
         
         if (input$alterOption == 'Two-sided') {
             
@@ -98,45 +111,36 @@ shinyServer(function(input, output) {
         
         }
         
-        t.test(x = x, mu = input$Mu0, alternative = alter)
+        if (flag.2samp() == 1) {
         
-    })
-
-
-    tTest.2samp <- reactive({
-    
-        x <- sampA()
-        y <- sampB()
+            out <- t.test(x = samp$sampA, mu = input$Mu0, alternative = alter)
         
-        if (input$alterOption == 'Two-sided') {
-            
-            alter <- 'two.sided'
+        } else if (flag.2samp() == 2) {
         
-        } else if (input$alterOption == 'Less') {
-        
-            alter <- 'less'
-        
-        } else if (input$alterOption == 'Greater') {
-        
-            alter <- 'greater'
+            out <- t.test(x = samp$sampA, y = samp$sampB, alternative = alter, var.equal = TRUE)
         
         }
         
-        t.test(x = x, y = y, alternative = alter, var.equal = TRUE)
+        out
         
     })
-    
-    bootstrapTest.1samp <- reactive({
+
+    bootstrapTest <- reactive({
     
         N <- round(input$bootNum)
         
-        sampA <- sampA()
+        samp <- samp()
         
-        nA <- length(sampA)
+        sampA <- samp$sampA
+        sampB <- samp$sampB
         
-        tt <- (mean(sampA) - input$Mu0) / sqrt(var(sampA) / nA) 
+        if (flag.2samp() == 1) {
+                    
+            nA <- length(sampA)
+        
+            tt <- (mean(sampA) - input$Mu0) / sqrt(var(sampA) / nA) 
 
-        ref <- unlist(
+            ref <- unlist(
                     lapply(
                         1:N,
                         function(x) {
@@ -149,60 +153,47 @@ shinyServer(function(input, output) {
                     )
                 )
         
-        result <- list(ref = ref, tt = tt)
         
-        return(result)
-    
-    })
-    
-
-    
-    bootstrapTest.2samp <- reactive({
-    
-        N <- round(input$bootNum)
+        } else if (flag.2samp() == 2) {
         
-        x <- sampA()
-        y <- sampB()
+                nA <- length(x)
+                nB <- length(y)
         
-        nA <- length(x)
-        nB <- length(y)
+                tt <- tstat(sampA, sampB)
         
-        tt <- tstat(x, y)
+                AB <- c(sampA, sampB)
         
-        xy <- c(x, y)
-        
-        ref <- unlist(
+                ref <- unlist(
                     lapply(
                         1:N,
                         function(x) {
                         
-                            x1 <- sample(xy, nA, replace = TRUE)
+                            sampA1 <- sample(AB, nA, replace = TRUE)
    
-                            y1 <- sample(xy, nB, replace = TRUE)
+                            sampB1 <- sample(AB, nB, replace = TRUE)
             
-                            tstat(x1, y1)
+                            tstat(sampA1, sampB1)
                             
                         }
                     )
                 )
         
-        result <- list(ref = ref, tt = tt)
+               
         
-        return(result)
+        }
+        
+        out <- list(ref = ref, tt = tt)
+        
+        out
+        
     
     })
     
+
+    
     bootstrapTest.stat <- reactive({
     
-        if (input$sampOption == 'One Sample') {
-        
-            ref <- bootstrapTest.1samp()
-        
-        } else if (input$sampOption == 'Two Samples') {
-        
-            ref <- bootstrapTest.2samp()
-        
-        }
+        ref <- bootstrapTest
         
         if (input$alterOption == 'Two-sided') {
         
@@ -236,39 +227,45 @@ shinyServer(function(input, output) {
         #Tab: Exploration
 ################################################################################################################
     output$SampAStat <- renderTable({
-
-        tb <- tbA()
+      
+        tb <- tb()
+           
+        if (flag.2samp() == 2) {
         
-        data.frame(
-            'Sample A Metric' = tb$Metric,
-            Value = tb$Value,
-            stringsAsFactors = FALSE
-        )
-
-    }, digits = 4)
-    
-    output$SampBStat <- renderTable({
-
-        tb <- tbB()
+            out <- data.frame(
+                'Sample A Metric' = tb$tbA$Metric,
+                'Value' = tb$tbA$Value,
+                stringsAsFactors = FALSE
+            )
         
-        data.frame(
-            'Sample B Metric' = tb$Metric,
-            Value = tb$Value,
-            stringsAsFactors = FALSE
-        )
-
-    }, digits = 4)
-    
+        } else if (flag.2samp() == 2) {
+        
+            out <- data.frame(
+                'Sample A Metric' = tb$tbA$Metric,
+                'Value A' = tb$tbA$Value,
+                'Sample B Metric' = tb$tbB$Metric,
+                'Value B' = tb$tbB$Value,
+                stringsAsFactors = FALSE
+            )
+        
+        }
+        
+        out
+        
+    }, digits = 4)  
     
     output$boxPlot <- renderPlot({
         
-        x <- sampA()
+        samp <- samp()
         
-        if (input$sampOption == 'One Sample') {
-            boxplot(x, horizontal = TRUE)
-        } else if (input$sampOption == 'Two Samples') {
-            y <- sampB()
-            boxplot(x, y, horizontal = TRUE)
+        if (flag.2samp() == 1) {
+        
+            boxplot(samp$sampA, horizontal = TRUE)
+            
+        } else if (flag.2samp() == 2) {
+ 
+            boxplot(samp$sampA, samp$sampB, horizontal = TRUE)
+        
         }
         
     
@@ -280,55 +277,47 @@ shinyServer(function(input, output) {
     
     output$testPlot <- renderPlot({
  
-        bootstrapTest <- bootstrapTest.stat()
+        bootstrapTest <- bootstrapTest()
         
-        if (input$sampOption == 'One Sample') {
+        tTest <- tTest()
         
-            tTest <- tTest.1samp()
-        
-        } else if (input$sampOption == 'Two Samples') {
-        
-            tTest <- tTest.2samp()
-        
+        hist(bootstrapTest$ref, freq = FALSE, xlim = c(-3, 3), ylim = c(0, dt(0, tTest$parameter)), col = 'grey')
+        curve(dt(x, tTest$parameter), add = TRUE)
+        abline(v = tTest$statistic, lty = 2)
+        text(x = tTest$statistic, y = dt(0, tTest$parameter) / 2, paste(round(tTest$statistic, 4)), srt = 270, pos = 4, col = 'black')
+       
+        if (input$alterOption == 'Two-sided') {
+       
+            abline(v = -bootstrapTest$crit, lty = 2, col = 'blue')
+            text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(-bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+           
+            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+            text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+           
+            abline(v = qt(input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
+            text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(0.05/ 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+           
+            abline(v = qt(1 - input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
+            text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - 0.05 / 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+           
+        } else if (input$alterOption == 'Less') {
+       
+            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+            text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+           
+            abline(v = qt(input$signLvl, tTest$parameter), lty = 2, col = 'red')
+            text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+           
+        } else if (input$alterOption == 'Greater') {
+       
+            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
+            text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+           
+            abline(v = qt(1 - input$signLvl, tTest$parameter), lty = 2, col = 'red')
+            text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+           
+       
         }
-        
-       hist(bootstrapTest$ref, freq = FALSE, xlim = c(-3, 3), ylim = c(0, dt(0, tTest$parameter)), col = 'grey')
-       curve(dt(x, tTest$parameter), add = TRUE)
-       abline(v = tTest$statistic, lty = 2)
-       text(x = tTest$statistic, y = dt(0, tTest$parameter) / 2, paste(round(tTest$statistic, 4)), srt = 270, pos = 4, col = 'black')
-       
-       if (input$alterOption == 'Two-sided') {
-       
-           abline(v = -bootstrapTest$crit, lty = 2, col = 'blue')
-           text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(-bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
-           
-           abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-           text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
-           
-           abline(v = qt(input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
-           text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(0.05/ 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
-           
-           abline(v = qt(1 - input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
-           text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - 0.05 / 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
-           
-       } else if (input$alterOption == 'Less') {
-       
-           abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-           text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
-           
-           abline(v = qt(input$signLvl, tTest$parameter), lty = 2, col = 'red')
-           text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
-           
-       } else if (input$alterOption == 'Greater') {
-       
-           abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-           text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
-           
-           abline(v = qt(1 - input$signLvl, tTest$parameter), lty = 2, col = 'red')
-           text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
-           
-       
-       }
 
         
     
