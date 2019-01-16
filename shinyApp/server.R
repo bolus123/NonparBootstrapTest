@@ -76,7 +76,7 @@ shinyServer(function(input, output) {
         
             tbA <- Statistics(samp$sampA)
         
-        } if (flag.2samp() == 2) {
+        } else if (flag.2samp() == 2) {
         
             tbA <- Statistics(samp$sampA)
             tbB <- Statistics(samp$sampB)
