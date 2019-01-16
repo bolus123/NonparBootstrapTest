@@ -272,7 +272,7 @@ server <- shinyServer(function(input, output) {
                 
                 } else if (input$alterOption == 'Greater') {
                 
-                    p.value <- sum(ref$ref > ref$tt ) / N
+                    p.value <- sum(ref$ref > ref$tt) / N
                     
                     crit <- quantile(ref$ref, 1 - input$signLvl )
                 
