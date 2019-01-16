@@ -65,14 +65,11 @@ shinyUI(fluidPage(
                     tabPanel("Exploration",
                         fluidRow(
                             column(5,
-                                tableOutput("SampAStat")
+                                tableOutput("SampStat")
                             ),
-                            column(5,
-                                tableOutput("SampBStat")
-                            )#,
-                            #column(10,
-                            #    plotOutput("boxPlot")
-                            #)
+                            column(10,
+                                plotOutput("boxPlot")
+                            )
                         )                        
                     ),
                         
