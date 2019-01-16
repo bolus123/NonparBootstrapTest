@@ -34,7 +34,7 @@ shinyServer(function(input, output) {
         
         out <- list(sampA = sampA, sampB = sampB)
         
-        out
+        return(out)
         
         
     })
@@ -59,7 +59,7 @@ shinyServer(function(input, output) {
         
         }
         
-        out
+        return(out)
     
     })
     
@@ -85,7 +85,7 @@ shinyServer(function(input, output) {
         
         out <- list(tbA = tbA, tbB = tbB)
         
-        out 
+        return(out) 
     })
     
 ################################################################################################################
@@ -121,7 +121,7 @@ shinyServer(function(input, output) {
         
         }
         
-        out
+        return(out)
         
     })
 
@@ -184,7 +184,7 @@ shinyServer(function(input, output) {
         
         out <- list(ref = ref, tt = tt)
         
-        out
+        return(out)
         
     
     })
@@ -193,7 +193,7 @@ shinyServer(function(input, output) {
     
     bootstrapTest.stat <- reactive({
     
-        ref <- bootstrapTest
+        ref <- bootstrapTest()
         
         if (input$alterOption == 'Two-sided') {
         
@@ -215,9 +215,9 @@ shinyServer(function(input, output) {
         
         }
         
-        result <- list(stat = ref$tt, p.value = p.value, ref = ref$ref, crit = crit)
+        out <- list(stat = ref$tt, p.value = p.value, ref = ref$ref, crit = crit)
         
-        return(result)
+        return(out)
     
     })
     
@@ -230,7 +230,7 @@ shinyServer(function(input, output) {
       
         tb <- tb()
            
-        if (flag.2samp() == 2) {
+        if (flag.2samp() == 1) {
         
             out <- data.frame(
                 'Sample A Metric' = tb$tbA$Metric,
@@ -250,7 +250,7 @@ shinyServer(function(input, output) {
         
         }
         
-        out
+        return(out)
         
     }, digits = 4)  
     
