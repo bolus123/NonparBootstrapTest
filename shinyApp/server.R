@@ -200,7 +200,7 @@ shinyServer(function(input, output) {
     
     AB <- reactive({
     
-        samp[["A"]] <- data.frame( 'Sample A' = c(
+        A <- data.frame( 'Sample A' = c(
             576
             ,650
             ,216
@@ -267,7 +267,7 @@ shinyServer(function(input, output) {
             ,115
         ), stringsAsFactors = FALSE)
         
-        samp[["B"]] <- data.frame('Sample B' = c(
+        B <- data.frame('Sample B' = c(
             178
             ,185
             ,119
@@ -327,12 +327,18 @@ shinyServer(function(input, output) {
             ,113
             ,592
         ), stringsAsFactors = FALSE)
+        
+        out <- list(A = A, B = B)
+        
+        out
     
     })
     
     observe({
        
-       samp <- AB()
+        ss <- AB()
+        A <- ss$A
+        B <- ss$B
        
         if (!is.null(input$hotA)) {
             samp[["previousA"]] <- isolate(samp[["A"]])
