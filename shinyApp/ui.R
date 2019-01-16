@@ -70,9 +70,6 @@ shinyUI(fluidPage(
                             column(6,
                                 tableOutput("SampBStat")
                             ),
-                           # column(6,
-                           #     plotOutput("boxplotA")
-                           # ),
                             column(12,
                                 plotOutput("boxPlot")
                             )
@@ -82,9 +79,7 @@ shinyUI(fluidPage(
                     tabPanel("Test",
                         fluidRow(
                             column(12,
-                                plotOutput("testPlot")
-                                #,textOutput("ControlChartWarning")
-                                
+                                plotOutput("testPlot")                                
                             )        
                         )
                     )
