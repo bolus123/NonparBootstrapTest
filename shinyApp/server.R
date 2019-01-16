@@ -1,63 +1,184 @@
 shinyServer(function(input, output) {
 
-  
     source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/shinyApp/head.server.R', local = TRUE)
 
+    A <- data.frame( 'Sample A' = c(
+            576
+            ,650
+            ,216
+            ,173
+            ,165
+            ,608
+            ,102
+            ,603
+            ,725
+            ,688
+            ,455
+            ,87
+            ,178
+            ,685
+            ,421
+            ,641
+            ,621
+            ,120
+            ,432
+            ,421
+            ,367
+            ,166
+            ,18
+            ,167
+            ,212
+            ,114
+            ,278
+            ,209
+            ,160
+            ,86
+            ,634
+            ,91
+            ,463
+            ,108
+            ,446
+            ,663
+            ,119
+            ,118
+            ,590
+            ,607
+            ,545
+            ,167
+            ,273
+            ,279
+            ,341
+            ,638
+            ,474
+            ,52
+            ,505
+            ,89
+            ,569
+            ,292
+            ,189
+            ,735
+            ,637
+            ,382
+            ,36
+            ,149
+            ,50
+            ,380
+            ,114
+            ,355
+            ,546
+            ,115
+        ), stringsAsFactors = FALSE)
+        
+    B <- data.frame('Sample B' = c(
+            178
+            ,185
+            ,119
+            ,244
+            ,213
+            ,139
+            ,152
+            ,326
+            ,168
+            ,225
+            ,256
+            ,373
+            ,398
+            ,220
+            ,216
+            ,268
+            ,179
+            ,93
+            ,361
+            ,198
+            ,406
+            ,225
+            ,315
+            ,598
+            ,376
+            ,166
+            ,194
+            ,76
+            ,164
+            ,136
+            ,326
+            ,373
+            ,97
+            ,270
+            ,183
+            ,311
+            ,181
+            ,466
+            ,283
+            ,259
+            ,108
+            ,291
+            ,154
+            ,397
+            ,138
+            ,212
+            ,164
+            ,181
+            ,160
+            ,107
+            ,253
+            ,114
+            ,154
+            ,459
+            ,289
+            ,265
+            ,113
+            ,592
+        ), stringsAsFactors = FALSE)
+    
     
 ################################################################################################################ 
     
-    samp <- reactive({
-
-        sampA <- NA
-        sampB <- NA
+    samp <- reactiveValues()
     
-        if (input$sampOption == "One Sample test") {
-        
-            sampA <- rnorm(49)
-        
-        } else if (input$sampOption == "One Sample") {
-    
-            sampA <- samp.xlsx.f(input$sampA)
-            
-        } else if (input$sampOption == "Two Samples test") {
-        
-            sampA <- rnorm(49)
-            sampB <- rnorm(52)
-        
-        } else if (input$sampOption == 'Two Samples') {
-        
-            sampA <- samp.xlsx.f(input$sampA)
-            sampB <- samp.xlsx.f(input$sampB)
-        
+    observe({
+       
+        if (!is.null(input$hotA)) {
+            A <- hot_to_r(input$hotA)
+        } else {
+        if (is.null(values[["A"]]))
+            A <- A
+        else
+            A <- values[["A"]]
         }
+        values[["A"]] <- A
         
-        
-        out <- list(sampA = sampA, sampB = sampB)
-        
-        return(out)
-        
-        
+        if (!is.null(input$hotB)) {
+            B <- hot_to_r(input$hotB)
+        } else {
+        if (is.null(values[["B"]]))
+            B <- B
+        else
+            B <- values[["B"]]
+        }
+        values[["B"]] <- B
+ 
     })
+    
     
     flag.2samp <- reactive({
         
-        if (input$sampOption == "One Sample test") {
-        
-            out <- 1
-        
-        } else if (input$sampOption == "One Sample") {
+        if (input$sampOption == "One Sample") {
     
             out <- 1
             
-        } else if (input$sampOption == "Two Samples test") {
-        
-            out <- 2
-        
         } else if (input$sampOption == 'Two Samples') {
         
             out <- 2
         
-        }
+        } #else if (input$sampOption == "One Sample test") {
+        #
+        #    out <- 1
+        #
+        #} else if (input$sampOption == "Two Samples test") {
+        #
+        #    out <- 2
+        #
+        #} 
         
         return(out)
     
@@ -67,19 +188,20 @@ shinyServer(function(input, output) {
     
     tb <- reactive({
     
-        samp <- samp()
+        sampA <- values[["A"]]
+        sampB <- values[["B"]]
         
         tbA <- NA
         tbB <- NA
         
         if (flag.2samp() == 1) {
         
-            tbA <- Statistics(samp$sampA)
+            tbA <- Statistics(sampA)
         
         } else if (flag.2samp() == 2) {
         
-            tbA <- Statistics(samp$sampA)
-            tbB <- Statistics(samp$sampB)
+            tbA <- Statistics(sampA)
+            tbB <- Statistics(sampB)
         
         }
         
@@ -91,6 +213,9 @@ shinyServer(function(input, output) {
 ################################################################################################################
 
     tTest <- reactive({
+    
+        sampA <- values[["A"]]
+        sampB <- values[["B"]]    
     
         tTestA <- NA
         tTestB <- NA
@@ -113,11 +238,11 @@ shinyServer(function(input, output) {
         
         if (flag.2samp() == 1) {
         
-            out <- t.test(x = samp$sampA, mu = input$Mu0, alternative = alter)
+            out <- t.test(x = sampA, mu = input$Mu0, alternative = alter)
         
         } else if (flag.2samp() == 2) {
         
-            out <- t.test(x = samp$sampA, y = samp$sampB, alternative = alter, var.equal = TRUE)
+            out <- t.test(x = sampA, y = sampB, alternative = alter, var.equal = TRUE)
         
         }
         
@@ -129,10 +254,8 @@ shinyServer(function(input, output) {
     
         N <- round(input$bootNum)
         
-        samp <- samp()
-        
-        sampA <- samp$sampA
-        sampB <- samp$sampB
+        sampA <- values[["A"]]
+        sampB <- values[["B"]]
         
         nA <- length(sampA)
         nB <- length(sampB)
@@ -222,6 +345,21 @@ shinyServer(function(input, output) {
     
     })
     
+################################################################################################################    
+        #Tab: Data
+################################################################################################################ 
+    
+    output$hotA <- renderRHandsontable({
+      A <- values[["A"]]
+      if (!is.null(A))
+        rhandsontable(A, useTypes = as.logical(input$useType), stretchH = "all")
+    })
+    
+    output$hotB <- renderRHandsontable({
+      B <- values[["B"]]
+      if (!is.null(B))
+        rhandsontable(B, useTypes = as.logical(input$useType), stretchH = "all")
+    })
     
     
 ################################################################################################################    
@@ -257,15 +395,16 @@ shinyServer(function(input, output) {
     
     output$boxPlot <- renderPlot({
         
-        samp <- samp()
+        sampA <- values[["A"]]
+        sampB <- values[["B"]]
         
         if (flag.2samp() == 1) {
         
-            boxplot(samp$sampA)
+            boxplot(sampA)
             
         } else if (flag.2samp() == 2) {
  
-            boxplot(samp$sampA, samp$sampB, names = c('A', 'B'))
+            boxplot(sampA, sampB, names = c('A', 'B'))
         
         }
         
