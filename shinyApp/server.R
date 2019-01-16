@@ -264,7 +264,7 @@ shinyServer(function(input, output) {
             
         } else if (flag.2samp() == 2) {
  
-            boxplot(samp$sampA, samp$sampB)
+            boxplot(samp$sampA, samp$sampB, names = c('A', 'B'))
         
         }
         

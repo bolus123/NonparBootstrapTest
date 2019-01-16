@@ -48,9 +48,9 @@ shinyUI(fluidPage(
                 
                 conditionalPanel(
                     condition = "input.sampOption == 'Two Samples'",
-                    fileInput('sampA', 'Choose the First Sample',
+                    fileInput('sampA', 'Choose Sample A',
                         accept = c(".xlsx")),
-                    fileInput('sampB', 'Choose the Second Sample',
+                    fileInput('sampB', 'Choose Sample B',
                         accept = c(".xlsx"))    
                 )
                    
