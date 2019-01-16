@@ -233,7 +233,7 @@ shinyServer(function(input, output) {
         if (flag.2samp() == 1) {
         
             out <- data.frame(
-                'Sample A Metric' = tb$tbA$Metric,
+                'Sample Metric' = tb$tbA$Metric,
                 'Value' = tb$tbA$Value,
                 stringsAsFactors = FALSE
             )
@@ -277,7 +277,7 @@ shinyServer(function(input, output) {
     
     output$testPlot <- renderPlot({
  
-        bootstrapTest <- bootstrapTest()
+        bootstrapTest <- bootstrapTest.stat()
         
         tTest <- tTest()
         
