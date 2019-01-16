@@ -70,9 +70,11 @@ shinyServer(function(input, output) {
     })
     
     tbB <-  reactive({
-        x <- sampB()
-        result <- Statistics(x)
-        
+       
+        if (input$sampOption == "Two Samples" | (input$sampOption == "Two Samples test")) {
+            x <- sampB()
+            result <- Statistics(x)
+        }
         result
     })
     
