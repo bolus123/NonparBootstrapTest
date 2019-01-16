@@ -193,6 +193,8 @@ shinyServer(function(input, output) {
     
     bootstrapTest.stat <- reactive({
     
+        N <- round(input$bootNum)
+    
         ref <- bootstrapTest()
         
         if (input$alterOption == 'Two-sided') {
