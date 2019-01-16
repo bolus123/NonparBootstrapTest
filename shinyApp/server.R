@@ -282,8 +282,8 @@ shinyServer(function(input, output) {
         
         tTest <- tTest()
         
-        x.max <- max(bootstrapTest$crit, -bootstrapTest$crit, qt(input$signLvl / 2), qt(1 - input$signLvl / 2), 3)
-        x.min <- min(bootstrapTest$crit, -bootstrapTest$crit, qt(input$signLvl / 2), qt(1 - input$signLvl / 2), -3)
+        x.max <- max(bootstrapTest$crit, -bootstrapTest$crit, qt(input$signLvl / 2, tTest$parameter), qt(1 - input$signLvl / 2, tTest$parameter), 3)
+        x.min <- min(bootstrapTest$crit, -bootstrapTest$crit, qt(input$signLvl / 2, tTest$parameter), qt(1 - input$signLvl / 2, tTest$parameter), -3)
         
         hist(bootstrapTest$ref, freq = FALSE, xlim = c(x.min, x.max), ylim = c(0, dt(0, tTest$parameter)), col = 'grey', main = "Comparison between Student's t test and Bootstrap Test", xlab = 't statistic')
         curve(dt(x, tTest$parameter), add = TRUE)
