@@ -140,21 +140,27 @@ shinyServer(function(input, output) {
         if (!is.null(input$hotA)) {
             A <- hot_to_r(input$hotA)
         } else {
-        if (is.null(samp[["A"]]))
-            A <- A
-        else
-            A <- samp[["A"]]
+            if (is.null(samp[["A"]])){
+                A <- A
+            }
+            else {
+                A <- samp[["A"]]
+            }
         }
+        
         samp[["A"]] <- A
         
         if (!is.null(input$hotB)) {
             B <- hot_to_r(input$hotB)
         } else {
-        if (is.null(samp[["B"]]))
-            B <- B
-        else
-            B <- samp[["B"]]
+            if (is.null(samp[["B"]])){
+                B <- B
+            }
+            else {
+                B <- samp[["B"]]
+            }
         }
+        
         samp[["B"]] <- B
  
     })
