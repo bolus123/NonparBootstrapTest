@@ -72,20 +72,27 @@ shinyUI(fluidPage(
                        
                     tabPanel("Data",
                         fluidRow(
-                            conditionalPanel(
-                                condition = "input.sampOption == 'One Sample'",
-                                rHandsontableOutput("hotA")
-                                
-                            ),
-                            
-                            conditionalPanel(
-                                condition = "input.sampOption == 'Two Samples'",
-                                splitLayout(
+                        
+                            splitLayout(
                                     cellWidths = c('50%', '50%')
                                     , rHandsontableOutput("hotA")
                                     , rHandsontableOutput("hotB")
                                 )
-                            )
+                        
+                            #conditionalPanel(
+                            #    condition = "input.sampOption == 'One Sample'",
+                            #    rHandsontableOutput("hotA")
+                            #    
+                            #),
+                            
+                            #conditionalPanel(
+                            #    condition = "input.sampOption == 'Two Samples'",
+                            #    splitLayout(
+                            #        cellWidths = c('50%', '50%')
+                            #        , rHandsontableOutput("hotA")
+                            #        , rHandsontableOutput("hotB")
+                            #    )
+                            #)
                         )                        
                     ),
                     

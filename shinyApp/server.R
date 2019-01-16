@@ -1,6 +1,3 @@
-
-
-
 shinyServer(function(input, output) {
 
     source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/shinyApp/head.server.R', local = TRUE)
