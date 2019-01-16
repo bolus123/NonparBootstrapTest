@@ -137,9 +137,7 @@ shinyServer(function(input, output) {
         nA <- length(sampA)
         nB <- length(sampB)
         
-        if (flag.2samp() == 1) {
-                    
-           
+        if (flag.2samp() == 1) {     
         
             tt <- (mean(sampA) - input$Mu0) / sqrt(var(sampA) / nA) 
 
