@@ -282,7 +282,7 @@ shinyServer(function(input, output) {
         
         tTest <- tTest()
         
-        hist(bootstrapTest$ref, freq = FALSE, xlim = c(-3, 3), ylim = c(0, dt(0, tTest$parameter)), col = 'grey')
+        hist(bootstrapTest$ref, freq = FALSE, xlim = c(-3, 3), ylim = c(0, dt(0, tTest$parameter)), col = 'grey', main = "Comparison between Student's t test and Bootstrap Test", xlab = 't statistic')
         curve(dt(x, tTest$parameter), add = TRUE)
         abline(v = tTest$statistic, lty = 2)
         text(x = tTest$statistic, y = dt(0, tTest$parameter) / 2, paste(round(tTest$statistic, 4)), srt = 270, pos = 4, col = 'black')
@@ -290,32 +290,60 @@ shinyServer(function(input, output) {
         if (input$alterOption == 'Two-sided') {
        
             abline(v = -bootstrapTest$crit, lty = 2, col = 'blue')
-            text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(-bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
-           
-            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-            text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
-           
             abline(v = qt(input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
-            text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(0.05/ 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
-           
+            
+            abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
             abline(v = qt(1 - input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
-            text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - 0.05 / 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+            
+            if (bootstrapTest$crit > qt(input$signLvl / 2, tTest$parameter)) {
+            
+                    text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(-bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+                    text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(0.05/ 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+                    
+                    text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+                    text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - 0.05 / 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+                    
+            } else {
+                    text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(-bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+                    text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(0.05/ 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+                    
+                    text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+                    text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - 0.05 / 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+            
+            }
+           
            
         } else if (input$alterOption == 'Less') {
        
             abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-            text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
-           
             abline(v = qt(input$signLvl, tTest$parameter), lty = 2, col = 'red')
-            text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+            
+           
+            if (bootstrapTest$crit > qt(input$signLvl, tTest$parameter)) {
+            
+                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+                text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+            
+            } else if {
+                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+                text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+            }
+           
            
         } else if (input$alterOption == 'Greater') {
        
             abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
-            text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
-           
             abline(v = qt(1 - input$signLvl, tTest$parameter), lty = 2, col = 'red')
-            text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+           
+            
+            if (bootstrapTest$crit > qt(1 - input$signLvl, tTest$parameter)) {
+                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+                text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')     
+            
+            } else if {
+                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+                text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')     
+            }
            
        
         }
