@@ -335,6 +335,8 @@ shinyServer(function(input, output) {
     
     observe({
        
+       samp <- AB()
+       
         if (!is.null(input$hotA)) {
             samp[["previousA"]] <- isolate(samp[["A"]])
             A <- hot_to_r(input$hotA)
@@ -348,9 +350,6 @@ shinyServer(function(input, output) {
         }
         
         samp[["A"]] <- A
-    })
-    
-    observe({
     
         if (!is.null(input$hotB)) {
             samp[["previousB"]] <- isolate(samp[["B"]])
