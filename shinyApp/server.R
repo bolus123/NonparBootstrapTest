@@ -64,12 +64,16 @@ shinyServer(function(input, output) {
     
     tbA <- reactive({
         x <- sampA()
-        Statistics(x)
+        result <- Statistics(x)
+        
+        result 
     })
     
     tbB <-  reactive({
         x <- sampB()
-        Statistics(x)
+        result <- Statistics(x)
+        
+        result
     })
     
 ################################################################################################################
@@ -253,15 +257,6 @@ shinyServer(function(input, output) {
 
     }, digits = 4)
     
-    output$boxplotA <- renderPlot({
-        x <- as.vector(sampA())
-        boxplot(x)
-    })
-    
-    output$boxplotB <- renderPlot({
-        x <- as.vector(sampB())
-        boxplot(x)
-    })
     
     output$boxPlot <- renderPlot({
         
