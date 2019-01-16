@@ -360,13 +360,13 @@ shinyServer(function(input, output) {
     output$hotA <- renderRHandsontable({
       A <- samp[["A"]]
       if (!is.null(A))
-        rhandsontable(A, useTypes = as.logical(input$useType), stretchH = "all")
+        rhandsontable(A, stretchH = "all")
     })
     
     output$hotB <- renderRHandsontable({
       B <- samp[["B"]]
       if (!is.null(B))
-        rhandsontable(B, useTypes = as.logical(input$useType), stretchH = "all")
+        rhandsontable(B, stretchH = "all")
     })
     
     
