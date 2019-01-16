@@ -250,7 +250,7 @@ shinyServer(function(input, output) {
         
         }
         
-        return(out)
+        return(t(out))
         
     }, digits = 4)  
     
@@ -260,11 +260,11 @@ shinyServer(function(input, output) {
         
         if (flag.2samp() == 1) {
         
-            boxplot(samp$sampA)
+            boxplot(samp$sampA, horizontal = TRUE)
             
         } else if (flag.2samp() == 2) {
  
-            boxplot(samp$sampA, samp$sampB, xlab = c('A', 'B'))
+            boxplot(samp$sampA, samp$sampB, horizontal = TRUE)
         
         }
         
