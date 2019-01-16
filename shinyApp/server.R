@@ -260,19 +260,19 @@ server <- shinyServer(function(input, output) {
                 
                 if (input$alterOption == 'Two-sided') {
                 
-                    p.value <- sum(abs(ref$tt) < abs(ref$ref)) / N 
+                    p.value <- sum(abs(ref$tt) > abs(ref$ref)) / N 
                     
                     crit <- quantile(abs(ref$ref), 1 - input$signLvl)
                 
                 } else if (input$alterOption == 'Less') {
                 
-                    p.value <- sum(ref$tt > ref$ref) / N
+                    p.value <- sum(ref$tt < ref$ref) / N
                     
                     crit <- quantile(ref$ref, input$signLvl )
                 
                 } else if (input$alterOption == 'Greater') {
                 
-                    p.value <- sum(ref$tt < ref$ref) / N
+                    p.value <- sum(ref$tt > ref$ref) / N
                     
                     crit <- quantile(ref$ref, 1 - input$signLvl )
                 
