@@ -238,6 +238,19 @@ server <- shinyServer(function(input, output) {
               if (!is.null(B)) rhandsontable(B, stretchH = "all")
             })
     
+            output$TestA <- renderTable({
+            
+                samp[["A"]]
+            
+            })
+            
+            output$TestB <- renderTable({
+            
+                samp[["B"]]
+            
+            })
+    
+    
         ################################################################################################################    
                 #Tab: Exploration
         ################################################################################################################

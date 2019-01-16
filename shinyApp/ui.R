@@ -82,6 +82,12 @@ source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/sh
                                         , rHandsontableOutput("hotB")
                                     )
                             
+                                ,splitLayout(
+                                        cellWidths = c('50%', '50%')
+                                        , tableOutput("TestA")
+                                        , tableOutput("TestB")
+                                    )
+                            
                                 #conditionalPanel(
                                 #    condition = "input.sampOption == 'One Sample'",
                                 #    rHandsontableOutput("hotA")
