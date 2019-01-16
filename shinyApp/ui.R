@@ -47,7 +47,7 @@ source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/sh
               
                     numericInput("signLvl", "Significance Level:", 0.05, min = 1e-6, max = 1 - 1e-6),
               
-                    numericInput("bootNum", "Bootstrap Repeatation(Must be integer):", 10000, min = 100)
+                    numericInput("bootNum", "Bootstrap Repeatation(Must be integer):", 100, min = 10)
               
                     #conditionalPanel(
                     #    condition = "input.sampOption == 'One Sample' & input.inputOption == 'Excel'",
@@ -82,7 +82,6 @@ source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/sh
                                         , rHandsontableOutput("hotB")
                                     )
                             
-                            
                                 #conditionalPanel(
                                 #    condition = "input.sampOption == 'One Sample'",
                                 #    rHandsontableOutput("hotA")
@@ -109,7 +108,6 @@ source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/sh
                                     , tableOutput("SampStat")
                                     , plotOutput("boxPlot")
                                 )
-                                #textOutput('TEST')
                             
                             )                        
                         ),
@@ -118,19 +116,22 @@ source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/sh
                             fluidRow(
                                 column(10,
                                     plotOutput("testPlot")                                
-                                )        
-                            )
-                        ),
-                        
-                        tabPanel("TestAB",
-                            fluidRow(
-                                splitLayout(
-                                        cellWidths = c('50%', '50%')
-                                        , tableOutput("TestA")
-                                        , tableOutput("TestB")
-                                    )       
+                                ),
+                                column(10,
+                                    textOutput("testPvalue")                                
+                                )    
                             )
                         )
+                        
+                        #,tabPanel("TestAB",
+                        #    fluidRow(
+                        #        splitLayout(
+                        #                cellWidths = c('50%', '50%')
+                        #                , tableOutput("TestA")
+                        #                , tableOutput("TestB")
+                        #            )       
+                        #    )
+                        #)
                             
                             
                             

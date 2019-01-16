@@ -29,12 +29,66 @@ server <- shinyServer(function(input, output) {
             
             })
             
+            
+        ################################################################################################################    
+                #Tab: Data
+        ################################################################################################################ 
+            
+            samp <- reactiveValues()
+         
+            observe({
+               
+                if (!is.null(input$hotA)) {
+                    samp[["previousA"]] <- isolate(samp[["A"]])
+                    A <- hot_to_r(input$hotA)
+                } else {
+                    if (is.null(samp[["A"]])){
+                        A <- A
+                    }
+                    else {
+                        A <- samp[["A"]]
+                    }
+                }
+                
+                samp[["A"]] <- A
+            
+                if (!is.null(input$hotB)) {
+                    samp[["previousB"]] <- isolate(samp[["B"]])
+                    B <- hot_to_r(input$hotB)
+                } else {
+                    if (is.null(samp[["B"]])){
+                        B <- B
+                    }
+                    else {
+                        B <- samp[["B"]]
+                    }
+                }
+                
+                samp[["B"]] <- B
+         
+            })
+            
+            
+            output$hotA <- renderRHandsontable({
+              A <- samp[["A"]]
+              if (!is.null(A)) rhandsontable(A, stretchH = "all")
+            })
+            
+            output$hotB <- renderRHandsontable({
+              B <- samp[["B"]]
+              if (!is.null(B)) rhandsontable(B, stretchH = "all")
+            })
+
+
+        ################################################################################################################    
+                #Tab: Exploration
         ################################################################################################################
+
             
-            tb <- reactive({
-            
-                sampA <- samp[["A"]]
-                sampB <- samp[["B"]]
+            output$SampStat <- renderTable({
+              
+                sampA <- samp[["A"]]$Sample.A
+                sampB <- samp[["B"]]$Sample.B
                 
                 tbA <- NA
                 tbB <- NA
@@ -50,17 +104,58 @@ server <- shinyServer(function(input, output) {
                 
                 }
                 
-                out <- list(tbA = tbA, tbB = tbB)
+                #tb <- list(tbA = tbA, tbB = tbB)
+                   
+                if (flag.2samp() == 1) {
                 
-                return(out) 
-            })
+                    out <- data.frame(
+                        'Sample Metric' = tbA$Metric,
+                        'Value' = tbA$Value,
+                        stringsAsFactors = FALSE
+                    )
+                
+                } else if (flag.2samp() == 2) {
+                
+                    out <- data.frame(
+                        'Sample A Metric' = tbA$Metric,
+                        'Value A' = tbA$Value,
+                        'Sample B Metric' = tbB$Metric,
+                        'Value B' = tbB$Value,
+                        stringsAsFactors = FALSE
+                    )
+                
+                }
+                
+                return(out)
+                
+            }, digits = 4)  
             
+            output$boxPlot <- renderPlot({
+                
+                sampA <- samp[["A"]]$Sample.A
+                sampB <- samp[["B"]]$Sample.B
+                
+                if (flag.2samp() == 1) {
+                
+                    boxplot(sampA)
+                    
+                } else if (flag.2samp() == 2) {
+         
+                    boxplot(sampA, sampB, names = c('A', 'B'))
+                
+                }
+                
+            })
+          
+        ################################################################################################################    
+                #Tab: Tests
         ################################################################################################################
+
 
             tTest <- reactive({
             
-                sampA <- samp[["A"]]
-                sampB <- samp[["B"]]    
+                sampA <- samp[["A"]]$Sample.A
+                sampB <- samp[["B"]]$Sample.B    
             
                 tTestA <- NA
                 tTestB <- NA
@@ -98,8 +193,8 @@ server <- shinyServer(function(input, output) {
             
                 N <- round(input$bootNum)
                 
-                sampA <- samp[["A"]]
-                sampB <- samp[["B"]]
+                sampA <- samp[["A"]]$Sample.A
+                sampB <- samp[["B"]]$Sample.B
                 
                 nA <- length(sampA)
                 nB <- length(sampB)
@@ -165,21 +260,21 @@ server <- shinyServer(function(input, output) {
                 
                 if (input$alterOption == 'Two-sided') {
                 
-                    p.value <- sum(abs(ref$tt) > abs(ref$ref)) / N 
+                    p.value <- sum(abs(ref$tt) < abs(ref$ref)) / N 
                     
                     crit <- quantile(abs(ref$ref), 1 - input$signLvl)
                 
                 } else if (input$alterOption == 'Less') {
                 
-                    p.value <- sum(ref$tt < ref$ref) / N
+                    p.value <- sum(ref$tt > ref$ref) / N
                     
-                    crit <- quantile(ref$ref, input$signLvl / 2)
+                    crit <- quantile(ref$ref, input$signLvl )
                 
                 } else if (input$alterOption == 'Greater') {
                 
-                    p.value <- sum(ref$tt > ref$ref) / N
+                    p.value <- sum(ref$tt < ref$ref) / N
                     
-                    crit <- quantile(ref$ref, 1 - input$signLvl / 2)
+                    crit <- quantile(ref$ref, 1 - input$signLvl )
                 
                 }
                 
@@ -189,123 +284,6 @@ server <- shinyServer(function(input, output) {
             
             })
             
-        ################################################################################################################    
-                #Tab: Data
-        ################################################################################################################ 
-            
-            samp <- reactiveValues()
-         
-            observe({
-               
-                if (!is.null(input$hotA)) {
-                    samp[["previousA"]] <- isolate(samp[["A"]])
-                    A <- hot_to_r(input$hotA)
-                } else {
-                    if (is.null(samp[["A"]])){
-                        A <- A
-                    }
-                    else {
-                        A <- samp[["A"]]
-                    }
-                }
-                
-                samp[["A"]] <- A
-            
-                if (!is.null(input$hotB)) {
-                    samp[["previousB"]] <- isolate(samp[["B"]])
-                    B <- hot_to_r(input$hotB)
-                } else {
-                    if (is.null(samp[["B"]])){
-                        B <- B
-                    }
-                    else {
-                        B <- samp[["B"]]
-                    }
-                }
-                
-                samp[["B"]] <- B
-         
-            })
-            
-            
-            output$hotA <- renderRHandsontable({
-              A <- samp[["A"]]
-              if (!is.null(A)) rhandsontable(A, stretchH = "all")
-            })
-            
-            output$hotB <- renderRHandsontable({
-              B <- samp[["B"]]
-              if (!is.null(B)) rhandsontable(B, stretchH = "all")
-            })
-    
-            output$TestA <- renderTable({
-            
-                samp[["A"]]
-            
-            })
-            
-            output$TestB <- renderTable({
-            
-                samp[["B"]]
-            
-            })
-    
-    
-        ################################################################################################################    
-                #Tab: Exploration
-        ################################################################################################################
-            
-            #output$TEST <- renderText({ flag.2samp() })
-            
-            output$SampStat <- renderTable({
-              
-                tb <- tb()
-                   
-                if (flag.2samp() == 1) {
-                
-                    out <- data.frame(
-                        'Sample Metric' = tb$tbA$Metric,
-                        'Value' = tb$tbA$Value,
-                        stringsAsFactors = FALSE
-                    )
-                
-                } else if (flag.2samp() == 2) {
-                
-                    out <- data.frame(
-                        'Sample A Metric' = tb$tbA$Metric,
-                        'Value A' = tb$tbA$Value,
-                        'Sample B Metric' = tb$tbB$Metric,
-                        'Value B' = tb$tbB$Value,
-                        stringsAsFactors = FALSE
-                    )
-                
-                }
-                
-                return(out)
-                
-            }, digits = 4)  
-            
-            output$boxPlot <- renderPlot({
-                
-                sampA <- samp[["A"]]
-                sampB <- samp[["B"]]
-                
-                if (flag.2samp() == 1) {
-                
-                    boxplot(sampA)
-                    
-                } else if (flag.2samp() == 2) {
-         
-                    boxplot(sampA, sampB, names = c('A', 'B'))
-                
-                }
-                
-            
-            })
-          
-        ################################################################################################################    
-                #Tab: Tests
-        ################################################################################################################
             
             output$testPlot <- renderPlot({
          
@@ -329,7 +307,7 @@ server <- shinyServer(function(input, output) {
                     abline(v = bootstrapTest$crit, lty = 2, col = 'blue')
                     abline(v = qt(1 - input$signLvl / 2, tTest$parameter), lty = 2, col = 'red')
                     
-                    if (bootstrapTest$crit > qt(input$signLvl / 2, tTest$parameter)) {
+                    if (bootstrapTest$crit > qt(1 - input$signLvl / 2, tTest$parameter)) {
                     
                             text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) * 3 / 4, paste(round(-bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
                             text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) * 3 / 4, paste(round(qt(input$signLvl / 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
@@ -384,6 +362,12 @@ server <- shinyServer(function(input, output) {
 
                 
             
+            })
+            
+            output$testPvalue <- renderText({
+            
+                paste('p-value of t test:', round(tTest()$p.value, 4), 'and p-value of bootstrap test:', round(bootstrapTest.stat()$p.value, 4), '\n')
+                
             })
             
 
