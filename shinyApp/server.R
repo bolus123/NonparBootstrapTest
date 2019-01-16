@@ -297,18 +297,18 @@ shinyServer(function(input, output) {
             
             if (bootstrapTest$crit > qt(input$signLvl / 2, tTest$parameter)) {
             
-                    text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(-bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
-                    text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(0.05/ 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+                    text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) * 3 / 4, paste(round(-bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+                    text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) * 3 / 4, paste(round(qt(input$signLvl / 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
                     
-                    text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
-                    text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - 0.05 / 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+                    text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) * 3 / 4, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+                    text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) * 3 / 4, paste(round(qt(1 - input$signLvl / 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
                     
             } else {
-                    text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(-bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
-                    text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(0.05/ 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+                    text(x = -bootstrapTest$crit, y = dt(0, tTest$parameter) * 3 / 4, paste(round(-bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+                    text(x = qt(input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) * 3 / 4, paste(round(qt(input$signLvl/ 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
                     
-                    text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
-                    text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - 0.05 / 2, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+                    text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) * 3 / 4, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+                    text(x = qt(1 - input$signLvl / 2, tTest$parameter), y = dt(0, tTest$parameter) * 3 / 4, paste(round(qt(1 - input$signLvl / 2, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
             
             }
            
@@ -321,12 +321,12 @@ shinyServer(function(input, output) {
            
             if (bootstrapTest$crit > qt(input$signLvl, tTest$parameter)) {
             
-                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
-                text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
+                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) * 3 / 4, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+                text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) * 3 / 4, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
             
             } else {
-                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
-                text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')
+                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) * 3 / 4, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+                text(x = qt(input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) * 3 / 4, paste(round(qt(input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')
             }
            
            
@@ -337,12 +337,12 @@ shinyServer(function(input, output) {
            
             
             if (bootstrapTest$crit > qt(1 - input$signLvl, tTest$parameter)) {
-                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
-                text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')     
+                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) * 3 / 4, paste(round(bootstrapTest$crit, 4)), srt = 270, pos = 4, col = 'blue')
+                text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) * 3 / 4, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 90, pos = 2, col = 'red')     
             
             } else {
-                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) / 2, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
-                text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) / 2, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')     
+                text(x = bootstrapTest$crit, y = dt(0, tTest$parameter) * 3 / 4, paste(round(bootstrapTest$crit, 4)), srt = 90, pos = 2, col = 'blue')
+                text(x = qt(1 - input$signLvl, tTest$parameter), y = dt(0, tTest$parameter) * 3 / 4, paste(round(qt(1 - input$signLvl, tTest$parameter), 4)), srt = 270, pos = 4, col = 'red')     
             }
            
        
