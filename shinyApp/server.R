@@ -140,22 +140,22 @@ shinyServer(function(input, output) {
         if (!is.null(input$hotA)) {
             A <- hot_to_r(input$hotA)
         } else {
-        if (is.null(values[["A"]]))
+        if (is.null(samp[["A"]]))
             A <- A
         else
-            A <- values[["A"]]
+            A <- samp[["A"]]
         }
-        values[["A"]] <- A
+        samp[["A"]] <- A
         
         if (!is.null(input$hotB)) {
             B <- hot_to_r(input$hotB)
         } else {
-        if (is.null(values[["B"]]))
+        if (is.null(samp[["B"]]))
             B <- B
         else
-            B <- values[["B"]]
+            B <- samp[["B"]]
         }
-        values[["B"]] <- B
+        samp[["B"]] <- B
  
     })
     
@@ -188,8 +188,8 @@ shinyServer(function(input, output) {
     
     tb <- reactive({
     
-        sampA <- values[["A"]]
-        sampB <- values[["B"]]
+        sampA <- samp[["A"]]
+        sampB <- samp[["B"]]
         
         tbA <- NA
         tbB <- NA
@@ -214,13 +214,12 @@ shinyServer(function(input, output) {
 
     tTest <- reactive({
     
-        sampA <- values[["A"]]
-        sampB <- values[["B"]]    
+        sampA <- samp[["A"]]
+        sampB <- samp[["B"]]    
     
         tTestA <- NA
         tTestB <- NA
-    
-        samp <- samp()
+
         
         if (input$alterOption == 'Two-sided') {
             
@@ -254,8 +253,8 @@ shinyServer(function(input, output) {
     
         N <- round(input$bootNum)
         
-        sampA <- values[["A"]]
-        sampB <- values[["B"]]
+        sampA <- samp[["A"]]
+        sampB <- samp[["B"]]
         
         nA <- length(sampA)
         nB <- length(sampB)
@@ -350,13 +349,13 @@ shinyServer(function(input, output) {
 ################################################################################################################ 
     
     output$hotA <- renderRHandsontable({
-      A <- values[["A"]]
+      A <- samp[["A"]]
       if (!is.null(A))
         rhandsontable(A, useTypes = as.logical(input$useType), stretchH = "all")
     })
     
     output$hotB <- renderRHandsontable({
-      B <- values[["B"]]
+      B <- samp[["B"]]
       if (!is.null(B))
         rhandsontable(B, useTypes = as.logical(input$useType), stretchH = "all")
     })
@@ -395,8 +394,8 @@ shinyServer(function(input, output) {
     
     output$boxPlot <- renderPlot({
         
-        sampA <- values[["A"]]
-        sampB <- values[["B"]]
+        sampA <- samp[["A"]]
+        sampB <- samp[["B"]]
         
         if (flag.2samp() == 1) {
         
