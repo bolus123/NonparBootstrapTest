@@ -69,10 +69,10 @@ shinyUI(fluidPage(
                             ),
                             column(6,
                                 tableOutput("SampBStat")
-                            ),
-                            column(12,
-                                plotOutput("boxPlot")
-                            )
+                            )#,
+                            #column(12,
+                            #    plotOutput("boxPlot")
+                            #)
                         )                        
                     ),
                         
