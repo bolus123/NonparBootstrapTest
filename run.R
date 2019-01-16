@@ -22,7 +22,7 @@ guineaPig.App <- function(A, B){
     source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/shinyApp/server.R', local = TRUE)    
       
     ## run app 
-    runApp(list(ui = ui, server = server), display.mode="showcase")
+    runApp(list(ui = ui, server = server))
     return(invisible())
 }
 
