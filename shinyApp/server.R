@@ -260,16 +260,15 @@ shinyServer(function(input, output) {
     
     output$boxPlot <- renderPlot({
         
-        x <- as.vector(sampA())
+        x <- sampA()
         
         if (input$sampOption == 'One Sample') {
-            pl <- boxplot(x, horizontal = TRUE)
+            boxplot(x, horizontal = TRUE)
         } else if (input$sampOption == 'Two Samples') {
-            y <- as.vector(sampB())
-            pl <- boxplot(x, y, horizontal = TRUE)
+            y <- sampB()
+            boxplot(x, y, horizontal = TRUE)
         }
         
-        pl
     
     })
   
