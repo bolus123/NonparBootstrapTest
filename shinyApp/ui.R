@@ -64,12 +64,13 @@ shinyUI(fluidPage(
                         
                     tabPanel("Exploration",
                         fluidRow(
-                            column(5,
-                                tableOutput("SampStat")
-                            ),
-                            column(5,
-                                plotOutput("boxPlot")
+                        
+                            splitLayout(
+                                cellWidths = c('50%', '50%')
+                                , tableOutput("SampStat")
+                                , plotOutput("boxPlot")
                             )
+                        
                         )                        
                     ),
                         
