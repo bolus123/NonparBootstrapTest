@@ -134,9 +134,12 @@ shinyServer(function(input, output) {
         sampA <- samp$sampA
         sampB <- samp$sampB
         
+        nA <- length(sampA)
+        nB <- length(sampB)
+        
         if (flag.2samp() == 1) {
                     
-            nA <- length(sampA)
+           
         
             tt <- (mean(sampA) - input$Mu0) / sqrt(var(sampA) / nA) 
 
@@ -145,9 +148,9 @@ shinyServer(function(input, output) {
                         1:N,
                         function(x) {
                         
-                            x1 <- sample(sampA, nA, replace = TRUE)
+                            sampA1 <- sample(sampA, nA, replace = TRUE)
                
-                            (mean(x1) - input$Mu0) / sqrt(var(x1) / nA) 
+                            (mean(sampA1) - input$Mu0) / sqrt(var(sampA1) / nA) 
                             
                         }
                     )
@@ -156,9 +159,7 @@ shinyServer(function(input, output) {
         
         } else if (flag.2samp() == 2) {
         
-                nA <- length(x)
-                nB <- length(y)
-        
+       
                 tt <- tstat(sampA, sampB)
         
                 AB <- c(sampA, sampB)
