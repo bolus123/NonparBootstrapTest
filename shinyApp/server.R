@@ -288,7 +288,7 @@ shinyServer(function(input, output) {
         hist(bootstrapTest$ref, freq = FALSE, xlim = c(x.min, x.max), ylim = c(0, dt(0, tTest$parameter)), col = 'grey', main = "Comparison between Student's t test and Bootstrap Test", xlab = 't statistic')
         curve(dt(x, tTest$parameter), add = TRUE)
         abline(v = tTest$statistic, lty = 2)
-        text(x = tTest$statistic, y = dt(0, tTest$parameter) / 2, paste(round(tTest$statistic, 4)), srt = 270, pos = 4, col = 'black')
+        text(x = tTest$statistic, y = dt(0, tTest$parameter) * 3 / 4, paste(round(tTest$statistic, 4)), srt = 270, pos = 4, col = 'black')
        
         if (input$alterOption == 'Two-sided') {
        
