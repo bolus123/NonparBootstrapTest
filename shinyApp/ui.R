@@ -47,7 +47,7 @@ source('https://raw.githubusercontent.com/bolus123/NonparBootstrapTest/master/sh
               
                     numericInput("signLvl", "Significance Level:", 0.05, min = 1e-6, max = 1 - 1e-6),
               
-                    numericInput("bootNum", "Bootstrap Repeatation(Must be integer):", 100, min = 10)
+                    numericInput("bootNum", "Bootstrap Repetition(Must be integer):", 100, min = 10)
               
                     #conditionalPanel(
                     #    condition = "input.sampOption == 'One Sample' & input.inputOption == 'Excel'",
